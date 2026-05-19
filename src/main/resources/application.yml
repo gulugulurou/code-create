@@ -1,4 +1,8 @@
 spring:
+  # 加载 对应 application-local.yml 文件配置内容
+  profiles:
+    active: local
+
   application:
     name: yu-ai-code-mother-backend
 
