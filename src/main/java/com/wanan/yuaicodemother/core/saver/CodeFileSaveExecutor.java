@@ -12,11 +12,11 @@ public class CodeFileSaveExecutor {
     private static final HtmlCodeFileSaverTemplate htmlCodeFileSaverTemplate = new HtmlCodeFileSaverTemplate();
     private static final MultiFileCodeFileSaverTemplate multiFileCodeFileSaverTemplate = new MultiFileCodeFileSaverTemplate();
 
-    public static File executeSaver(Object codeContent, CodeGenTypeEnum codeGenTypeEnum) {
-        switch (codeGenTypeEnum) {
-            case HTML: htmlCodeFileSaverTemplate.saveCode((HtmlCodeResult) codeContent);
-            case MULTI_FILE: multiFileCodeFileSaverTemplate.saveCode((MultiFileCodeResult) codeContent);
-            default: throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型" + codeGenTypeEnum);
-        }
+    public static File executeSaver(Object codeContent, CodeGenTypeEnum codeGenType, Long appId) {
+        return switch (codeGenType) {
+            case HTML-> htmlCodeFileSaverTemplate.saveCode((HtmlCodeResult) codeContent, appId);
+            case MULTI_FILE-> multiFileCodeFileSaverTemplate.saveCode((MultiFileCodeResult) codeContent, appId);
+            default -> throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型：" + codeGenType);
+        };
     }
 }
