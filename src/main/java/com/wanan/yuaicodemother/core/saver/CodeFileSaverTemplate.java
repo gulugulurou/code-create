@@ -3,6 +3,7 @@ package com.wanan.yuaicodemother.core.saver;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
+import com.wanan.yuaicodemother.common.AppConstant;
 import com.wanan.yuaicodemother.model.enums.CodeGenTypeEnum;
 import com.wanan.yuaicodemother.exception.BusinessException;
 import com.wanan.yuaicodemother.exception.ErrorCode;
@@ -11,7 +12,8 @@ import java.io.File;
 
 public abstract class CodeFileSaverTemplate<T> {
 
-    private static final String FILE_SAVE_ROOT_DIR = System.getProperty("user.dir") + "/tmp/code_output";
+    // 文件保存根目录
+    protected static final String FILE_SAVE_ROOT_DIR = AppConstant.CODE_OUTPUT_ROOT_DIR;
 
     public final File saveCode(T codeResult, Long appId) {
         // 校验 入参
