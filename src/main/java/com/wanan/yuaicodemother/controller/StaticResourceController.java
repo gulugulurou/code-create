@@ -15,8 +15,8 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.io.File;
 
-//@RestController
-//@RequestMapping("/static")
+@RestController
+@RequestMapping("/static")
 public class StaticResourceController {
 
     // 应用生成根目录（用于浏览）

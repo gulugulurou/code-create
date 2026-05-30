@@ -5,25 +5,20 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wanan.yuaicodemother.common.AppConstant;
-import com.wanan.yuaicodemother.constant.UserConstant;
 import com.wanan.yuaicodemother.core.AiCodeGeneratorFacade;
 import com.wanan.yuaicodemother.exception.BusinessException;
 import com.wanan.yuaicodemother.exception.ErrorCode;
+import com.wanan.yuaicodemother.mapper.AppMapper;
 import com.wanan.yuaicodemother.model.dto.app.AppQueryRequest;
 import com.wanan.yuaicodemother.model.dto.app.AppVO;
-import com.wanan.yuaicodemother.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.wanan.yuaicodemother.model.dto.user.UserVO;
 import com.wanan.yuaicodemother.model.entity.App;
-import com.wanan.yuaicodemother.mapper.AppMapper;
-import com.wanan.yuaicodemother.model.entity.ChatHistory;
 import com.wanan.yuaicodemother.model.entity.User;
 import com.wanan.yuaicodemother.model.enums.ChatHistoryMessageTypeEnum;
 import com.wanan.yuaicodemother.model.enums.CodeGenTypeEnum;
-import com.wanan.yuaicodemother.model.enums.UserRoleEnum;
 import com.wanan.yuaicodemother.service.AppService;
 import com.wanan.yuaicodemother.service.ChatHistoryService;
 import com.wanan.yuaicodemother.service.UserService;
@@ -125,7 +120,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型");
         }
         // 5. 将用户提问的信息存储到硬盘中
-        chatHistoryService.addChatMessage(appId, message, codeGenTypeStr, loginUser.getId());
+        chatHistoryService.addChatMessage(appId, message, ChatHistoryMessageTypeEnum.USER.getValue(), loginUser.getId());
         // 6. 调用 AI 生成代码（流式）
         Flux<String> contentFlux = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
         // 7. 收集AI响应内容并在完成后记录到对话历史

@@ -1,6 +1,7 @@
 package com.wanan.yuaicodemother.core;
 
 import com.wanan.yuaicodemother.ai.AiCodeGeneratorService;
+import com.wanan.yuaicodemother.ai.AiCodeGeneratorServiceFactory;
 import com.wanan.yuaicodemother.ai.model.HtmlCodeResult;
 import com.wanan.yuaicodemother.ai.model.MultiFileCodeResult;
 import com.wanan.yuaicodemother.core.parser.CodeParserExecutor;
@@ -8,6 +9,7 @@ import com.wanan.yuaicodemother.core.saver.CodeFileSaveExecutor;
 import com.wanan.yuaicodemother.exception.BusinessException;
 import com.wanan.yuaicodemother.exception.ErrorCode;
 import com.wanan.yuaicodemother.model.enums.CodeGenTypeEnum;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,12 @@ import java.io.File;
 public class AiCodeGeneratorFacade {
 
     private static final Logger log = LoggerFactory.getLogger(AiCodeGeneratorFacade.class);
+
     @Autowired
     private AiCodeGeneratorService aiCodeGeneratorService;
+
+    @Resource
+    private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
 
 
     /**
@@ -35,6 +41,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
+        // 根据 appId 获取对应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(userMessage);
@@ -61,6 +69,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
+        // 根据 appId 获取对应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
@@ -87,6 +97,7 @@ public class AiCodeGeneratorFacade {
 //    }
 
     private File generaAndSaveHtmlCode(String userMessage) {
+
         HtmlCodeResult htmlCodeResult = aiCodeGeneratorService.generateHtmlCode(userMessage);
         return CodeFileSaver.saveHtmlCodeResult(htmlCodeResult);
     }
